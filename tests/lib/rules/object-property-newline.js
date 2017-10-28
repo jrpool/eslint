@@ -22,20 +22,23 @@ ruleTester.run("object-property-newline", rule, {
 
     valid: [
 
-        // default-case
+        // default ("always")
         "var obj = {\nk1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4'\n};",
-        "var obj = {\nk1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n, k4: 'val4'\n};",
-        "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4' };",
-        "var obj = { k1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n, k4: 'val4' };",
-        "var obj = { k1: 'val1' };",
-        "var obj = {\nk1: 'val1'\n};",
-        "var obj = {};",
+
+        // "always"
+        { code: "var obj = {\nk1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4'\n};", options: ["always"] },
+        { code: "var obj = {\nk1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n, k4: 'val4'\n};", options: ["always"] }
+        { code: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4' };", options: ["always"] }
+        { code: "var obj = { k1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n, k4: 'val4' };", options: ["always"] }
+        { code: "var obj = { k1: 'val1' };", options: ["always"] }
+        { code: "var obj = {\nk1: 'val1'\n};", options: ["always"] }
+        { code: "var obj = {};", options: ["always"] }
         { code: "var obj = {\n[bar]: 'baz',\nbaz\n};", parserOptions: { ecmaVersion: 6 } },
         { code: "var obj = {\nk1: 'val1',\nk2: 'val2',\n...{}\n};", parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
         { code: "var obj = { k1: 'val1',\nk2: 'val2',\n...{} };", parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
         { code: "var obj = { ...{} };", parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
-        "foo({ k1: 'val1',\nk2: 'val2' });",
-        "foo({\nk1: 'val1',\nk2: 'val2'\n});",
+        { code: "foo({ k1: 'val1',\nk2: 'val2' });", options: ["always"] }
+        { code: "foo({\nk1: 'val1',\nk2: 'val2'\n});", options: ["always"] }
         { code: "foo({\na,\nb\n});", parserOptions: { ecmaVersion: 6 } },
         { code: "foo({\na,\nb,\n});", parserOptions: { ecmaVersion: 6 } },
         { code: "foo({\nbar() {},\nbaz\n});", parserOptions: { ecmaVersion: 6 } },
@@ -44,47 +47,62 @@ ruleTester.run("object-property-newline", rule, {
         { code: "foo({ k1: 'val1',\nk2: 'val2',\n...{} });", parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
         { code: "foo({ ...{} });", parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
 
-        // allowAllPropertiesOnSameLine: true
+        // default ("always"), { allowAllPropertiesOnSameLine: true }
         { code: "var obj = { k1: 'val1', k2: 'val2', k3: 'val3' };", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "var obj = {\nk1: 'val1', k2: 'val2', k3: 'val3'\n};", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "var obj = { k1: 'val1' };", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "var obj = {\nk1: 'val1'\n};", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "var obj = {};", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "var obj = { 'k1': 'val1', k2: 'val2', ...{} };", options: [{ allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
-        { code: "var obj = {\n'k1': 'val1', k2: 'val2', ...{}\n};", options: [{ allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
-        { code: "foo({ k1: 'val1', k2: 'val2' });", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "foo({\nk1: 'val1', k2: 'val2'\n});", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "foo({ a, b });", options: [{ allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6 } },
-        { code: "foo({ bar() {}, baz });", options: [{ allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6 } },
-        { code: "foo({ [bar]: 'baz', baz })", options: [{ allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6 } },
-        { code: "foo({ 'k1': 'val1', k2: 'val2', ...{} });", options: [{ allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
-        { code: "foo({\n'k1': 'val1', k2: 'val2', ...{}\n});", options: [{ allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
-        { code: "var obj = {k1: ['foo', 'bar'], k2: 'val1', k3: 'val2'};", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "var obj = {\nk1: ['foo', 'bar'], k2: 'val1', k3: 'val2'\n};", options: [{ allowAllPropertiesOnSameLine: true }] },
-        { code: "var obj = {\nk1: 'val1', k2: {e1: 'foo', e2: 'bar'}, k3: 'val2'\n};", options: [{ allowAllPropertiesOnSameLine: true }] },
 
-        // allowMultiplePropertiesPerLine: true (deprecated)
+        // "always", { allowAllPropertiesOnSameLine: true }
+        { code: "var obj = { k1: 'val1', k2: 'val2', k3: 'val3' };", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "var obj = {\nk1: 'val1', k2: 'val2', k3: 'val3'\n};", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "var obj = { k1: 'val1' };", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "var obj = {\nk1: 'val1'\n};", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "var obj = {};", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "var obj = { 'k1': 'val1', k2: 'val2', ...{} };", options: ["always", { allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
+        { code: "var obj = {\n'k1': 'val1', k2: 'val2', ...{}\n};", options: ["always", { allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
+        { code: "foo({ k1: 'val1', k2: 'val2' });", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "foo({\nk1: 'val1', k2: 'val2'\n});", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "foo({ a, b });", options: ["always", { allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6 } },
+        { code: "foo({ bar() {}, baz });", options: ["always", { allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6 } },
+        { code: "foo({ [bar]: 'baz', baz })", options: ["always", { allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6 } },
+        { code: "foo({ 'k1': 'val1', k2: 'val2', ...{} });", options: ["always", { allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
+        { code: "foo({\n'k1': 'val1', k2: 'val2', ...{}\n});", options: ["always", { allowAllPropertiesOnSameLine: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
+        { code: "var obj = {k1: ['foo', 'bar'], k2: 'val1', k3: 'val2'};", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "var obj = {\nk1: ['foo', 'bar'], k2: 'val1', k3: 'val2'\n};", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+        { code: "var obj = {\nk1: 'val1', k2: {e1: 'foo', e2: 'bar'}, k3: 'val2'\n};", options: ["always", { allowAllPropertiesOnSameLine: true }] },
+
+        // default ("always"), { allowMultiplePropertiesPerLine: true } (deprecated)
         { code: "var obj = { k1: 'val1', k2: 'val2', k3: 'val3' };", options: [{ allowMultiplePropertiesPerLine: true }] },
 
-        // treatComputedPropertiesLikeJSCS: true
+        // "always", { allowMultiplePropertiesPerLine: true } (deprecated)
+        { code: "var obj = { k1: 'val1', k2: 'val2', k3: 'val3' };", options: ["always", { allowMultiplePropertiesPerLine: true }] },
+
+        // default ("always"), { treatComputedPropertiesLikeJSCS: true }
         { code: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4' };", options: [{ treatComputedPropertiesLikeJSCS: true }] },
-        { code: "var obj = { k1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n, k4: 'val4' };", options: [{ treatComputedPropertiesLikeJSCS: true }] },
-        { code: "foo({\nk1: 'val1',\n[bar]: 'baz',\nbaz\n})", options: [{ treatComputedPropertiesLikeJSCS: true }], parserOptions: { ecmaVersion: 6 } },
-        { code: "foo({\nk1: 'val1', [\nbar\n]: 'baz',\nbaz\n})", options: [{ treatComputedPropertiesLikeJSCS: true }], parserOptions: { ecmaVersion: 6 } },
-        { code: "foo({\nk1: 'val1', [\nbar\n]: 'baz'\n,baz\n})", options: [{ treatComputedPropertiesLikeJSCS: true }], parserOptions: { ecmaVersion: 6 } },
 
-        // noCommaFirst: true
+        // "always", { treatComputedPropertiesLikeJSCS: true }
+        { code: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4' };", options: ["always", { treatComputedPropertiesLikeJSCS: true }] },
+        { code: "var obj = { k1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n, k4: 'val4' };", options: ["always", { treatComputedPropertiesLikeJSCS: true }] },
+        { code: "foo({\nk1: 'val1',\n[bar]: 'baz',\nbaz\n})", options: ["always", { treatComputedPropertiesLikeJSCS: true }], parserOptions: { ecmaVersion: 6 } },
+        { code: "foo({\nk1: 'val1', [\nbar\n]: 'baz',\nbaz\n})", options: ["always", { treatComputedPropertiesLikeJSCS: true }], parserOptions: { ecmaVersion: 6 } },
+        { code: "foo({\nk1: 'val1', [\nbar\n]: 'baz'\n,baz\n})", options: ["always", { treatComputedPropertiesLikeJSCS: true }], parserOptions: { ecmaVersion: 6 } },
+
+        // default ("always"), { noCommaFirst: true }
         { code: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4' };", options: [{ noCommaFirst: true }] },
-        { code: "foo({\nk1: 'val1',\nk2: 'val2',\n...{}\n});", options: [{ noCommaFirst: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
 
-        // { treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }
+        // "always", { noCommaFirst: true }
+        { code: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4' };", options: ["always", { noCommaFirst: true }] },
+        { code: "foo({\nk1: 'val1',\nk2: 'val2',\n...{}\n});", options: ["always", { noCommaFirst: true }], parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } } },
+
+        // default ("always"), { treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }
         { code: "foo({\nk1: 'val1', [\nbar\n]: 'baz',\nbaz\n})", options: [{ treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }], parserOptions: { ecmaVersion: 6 } }
+
+        // "always", { treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }
+        { code: "foo({\nk1: 'val1', [\nbar\n]: 'baz',\nbaz\n})", options: ["always", { treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }], parserOptions: { ecmaVersion: 6 } }
 
     ],
 
     invalid: [
 
-        // default-case
+        // "always"
         {
             code: "var obj = { k1: 'val1', k2: 'val2', k3: 'val3' };",
             output: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3' };",
@@ -396,11 +414,11 @@ ruleTester.run("object-property-newline", rule, {
             ]
         },
 
-        // allowAllPropertiesOnSameLine: true
+        // "always", { allowAllPropertiesOnSameLine: true }
         {
             code: "var obj = {\nk1: 'val1',\nk2: 'val2', k3: 'val3'\n};",
             output: "var obj = {\nk1: 'val1',\nk2: 'val2',\nk3: 'val3'\n};",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line if they aren't all on the same line.",
@@ -413,7 +431,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1:\n'val1', k2: 'val2', k3:\n'val3'\n};",
             output: "var obj = {\nk1:\n'val1',\nk2: 'val2',\nk3:\n'val3'\n};",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line if they aren't all on the same line.",
@@ -432,7 +450,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {k1: [\n'foo',\n'bar'\n], k2: 'val1'};",
             output: "var obj = {k1: [\n'foo',\n'bar'\n],\nk2: 'val1'};",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line if they aren't all on the same line.",
@@ -445,7 +463,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {k1: [\n'foo', 'bar'\n], k2: 'val1'};",
             output: "var obj = {k1: [\n'foo', 'bar'\n],\nk2: 'val1'};",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line if they aren't all on the same line.",
@@ -458,7 +476,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1: 'val1', k2: {\ne1: 'foo', e2: 'bar'\n}, k3: 'val2'\n};",
             output: "var obj = {\nk1: 'val1',\nk2: {\ne1: 'foo', e2: 'bar'\n},\nk3: 'val2'\n};",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line if they aren't all on the same line.",
@@ -477,7 +495,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = { k1: 'val1',\nk2: [\n'val2a', 'val2b', 'val2c'\n], k3: 'val3' };",
             output: "var obj = { k1: 'val1',\nk2: [\n'val2a', 'val2b', 'val2c'\n],\nk3: 'val3' };",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line if they aren't all on the same line.",
@@ -490,7 +508,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = { [\nk1]: 'val1', k2: 'val2' };",
             output: "var obj = { [\nk1]: 'val1',\nk2: 'val2' };",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -504,7 +522,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1: 'val1',\nk2: 'val2', ...{}\n};",
             output: "var obj = {\nk1: 'val1',\nk2: 'val2',\n...{}\n};",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -518,7 +536,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\n...{},\nk1: 'val1', k2: 'val2'\n};",
             output: "var obj = {\n...{},\nk1: 'val1',\nk2: 'val2'\n};",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -532,7 +550,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({ [\nk1]: 'val1', k2: 'val2' })",
             output: "foo({ [\nk1]: 'val1',\nk2: 'val2' })",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -546,7 +564,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({\nk1: 'val1',\nk2: 'val2', ...{}\n})",
             output: "foo({\nk1: 'val1',\nk2: 'val2',\n...{}\n})",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -560,7 +578,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({\n...{},\nk1: 'val1', k2: 'val2'\n})",
             output: "foo({\n...{},\nk1: 'val1',\nk2: 'val2'\n})",
-            options: [{ allowAllPropertiesOnSameLine: true }],
+            options: ["always", { allowAllPropertiesOnSameLine: true }],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -572,11 +590,11 @@ ruleTester.run("object-property-newline", rule, {
             ]
         },
 
-        // allowMultiplePropertiesPerLine: true (deprecated)
+        // "always", { allowMultiplePropertiesPerLine: true } (deprecated)
         {
             code: "var obj = {\nk1: 'val1',\nk2: 'val2', k3: 'val3'\n};",
             output: "var obj = {\nk1: 'val1',\nk2: 'val2',\nk3: 'val3'\n};",
-            options: [{ allowMultiplePropertiesPerLine: true }],
+            options: ["always", { allowMultiplePropertiesPerLine: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line if they aren't all on the same line.",
@@ -587,11 +605,11 @@ ruleTester.run("object-property-newline", rule, {
             ]
         },
 
-        // treatComputedPropertiesLikeJSCS: true
+        // "always", { treatComputedPropertiesLikeJSCS: true }
         {
             code: "foo({\nk1: 'val1', [\nisFoo ? 'foo' : 'noo'\n]: 'val2', baz})",
             output: "foo({\nk1: 'val1', [\nisFoo ? 'foo' : 'noo'\n]: 'val2',\nbaz})",
-            options: [{ treatComputedPropertiesLikeJSCS: true }],
+            options: ["always", { treatComputedPropertiesLikeJSCS: true }],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -605,7 +623,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = { k1: 'val1',\nk2: [\n'val2a', 'val2b', 'val2c'\n], k3: 'val3' };",
             output: "var obj = { k1: 'val1',\nk2: [\n'val2a', 'val2b', 'val2c'\n],\nk3: 'val3' };",
-            options: [{ treatComputedPropertiesLikeJSCS: true }],
+            options: ["always", { treatComputedPropertiesLikeJSCS: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line. The opening bracket of a computed property name may end a line on which another property appears.",
@@ -616,11 +634,11 @@ ruleTester.run("object-property-newline", rule, {
             ]
         },
 
-        // noCommaFirst: true
+        // "always", { noCommaFirst: true }
         {
             code: "var obj = {\nk1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n};",
             output: "var obj = {\nk1: 'val1'\n,\nk2: 'val2'\n,\nk3: 'val3'\n};",
-            options: [{ noCommaFirst: true }],
+            options: ["always", { noCommaFirst: true }],
             errors: [
                 {
                     message: "Object properties must go on a new line. The comma delimiting two properties may not share a line with any of the second property.",
@@ -639,7 +657,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1: 'val1'\n, k2: 'val2'\n, [\nbaz1\n]: 'val3'\n};",
             output: "var obj = {\nk1: 'val1'\n,\nk2: 'val2'\n,\n[\nbaz1\n]: 'val3'\n};",
-            options: [{ noCommaFirst: true }],
+            options: ["always", { noCommaFirst: true }],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -657,11 +675,11 @@ ruleTester.run("object-property-newline", rule, {
             ]
         },
 
-        // { treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }
+        // "always", { treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }
         {
             code: "var obj = {\nk1: 'val1'\n, k2: 'val2'\n, [\nbaz2\n]: 'val3'\n};",
             output: "var obj = {\nk1: 'val1'\n,\nk2: 'val2'\n, [\nbaz2\n]: 'val3'\n};",
-            options: [{
+            options: ["always", {
                 treatComputedPropertiesLikeJSCS: true, noCommaFirst: true
             }],
             parserOptions: { ecmaVersion: 6 },
