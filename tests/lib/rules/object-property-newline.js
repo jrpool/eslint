@@ -102,7 +102,7 @@ ruleTester.run("object-property-newline", rule, {
 
     invalid: [
 
-        // "always"
+        // default ("always")
         {
             code: "var obj = { k1: 'val1', k2: 'val2', k3: 'val3' };",
             output: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3' };",
@@ -121,9 +121,31 @@ ruleTester.run("object-property-newline", rule, {
                 }
             ]
         },
+
+        // "always"
+        {
+            code: "var obj = { k1: 'val1', k2: 'val2', k3: 'val3' };",
+            output: "var obj = { k1: 'val1',\nk2: 'val2',\nk3: 'val3' };",
+            options: ["always"],
+            errors: [
+                {
+                    message: "Object properties must go on a new line.",
+                    type: "ObjectExpression",
+                    line: 1,
+                    column: 25
+                },
+                {
+                    message: "Object properties must go on a new line.",
+                    type: "ObjectExpression",
+                    line: 1,
+                    column: 37
+                }
+            ]
+        },
         {
             code: "var obj = {\nk1: 'val1', k2: 'val2'\n};",
             output: "var obj = {\nk1: 'val1',\nk2: 'val2'\n};",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -136,6 +158,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1: 'val1', k2: 'val2',\nk3: 'val3', k4: 'val4'\n};",
             output: "var obj = {\nk1: 'val1',\nk2: 'val2',\nk3: 'val3',\nk4: 'val4'\n};",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -154,6 +177,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {k1: ['foo', 'bar'], k2: 'val1'};",
             output: "var obj = {k1: ['foo', 'bar'],\nk2: 'val1'};",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -166,6 +190,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {k1: [\n'foo', 'bar'\n], k2: 'val1'};",
             output: "var obj = {k1: [\n'foo', 'bar'\n],\nk2: 'val1'};",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -178,6 +203,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1: 'val1', k2: {e1: 'foo', e2: 'bar'}, k3: 'val2'\n};",
             output: "var obj = {\nk1: 'val1',\nk2: {e1: 'foo',\ne2: 'bar'},\nk3: 'val2'\n};",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -202,6 +228,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1: 'val1',\nk2: {e1: 'foo', e2: 'bar'},\nk3: 'val2'\n};",
             output: "var obj = {\nk1: 'val1',\nk2: {e1: 'foo',\ne2: 'bar'},\nk3: 'val2'\n};",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -214,6 +241,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = { k1: 'val1',\nk2: [\n'val2a', 'val2b', 'val2c'\n], k3: 'val3' };",
             output: "var obj = { k1: 'val1',\nk2: [\n'val2a', 'val2b', 'val2c'\n],\nk3: 'val3' };",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -226,6 +254,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = { k1: 'val1', [\nk2]: 'val2' };",
             output: "var obj = { k1: 'val1',\n[\nk2]: 'val2' };",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -239,6 +268,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = { k1: 'val1', ...{} };",
             output: "var obj = { k1: 'val1',\n...{} };",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -252,6 +282,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\nk1: 'val1', ...{}\n};",
             output: "var obj = {\nk1: 'val1',\n...{}\n};",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -265,6 +296,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({ k1: 'val1', k2: 'val2' });",
             output: "foo({ k1: 'val1',\nk2: 'val2' });",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -277,6 +309,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({\nk1: 'val1', k2: 'val2'\n});",
             output: "foo({\nk1: 'val1',\nk2: 'val2'\n});",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -289,6 +322,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({ a, b });",
             output: "foo({ a,\nb });",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -302,6 +336,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({\na, b\n});",
             output: "foo({\na,\nb\n});",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -315,6 +350,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({\nbar() {}, baz\n});",
             output: "foo({\nbar() {},\nbaz\n});",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -328,6 +364,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({\n[bar]: 'baz', baz\n})",
             output: "foo({\n[bar]: 'baz',\nbaz\n})",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -341,6 +378,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({ k1: 'val1', [\nk2]: 'val2' })",
             output: "foo({ k1: 'val1',\n[\nk2]: 'val2' })",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6 },
             errors: [
                 {
@@ -354,6 +392,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({ k1: 'val1', ...{} })",
             output: "foo({ k1: 'val1',\n...{} })",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -367,6 +406,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "foo({\nk1: 'val1', ...{}\n})",
             output: "foo({\nk1: 'val1',\n...{}\n})",
+            options: ["always"],
             parserOptions: { ecmaVersion: 6, ecmaFeatures: { experimentalObjectRestSpread: true } },
             errors: [
                 {
@@ -380,6 +420,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "var obj = {\na: {\nb: 1,\nc: 2\n}, d: 2\n};",
             output: "var obj = {\na: {\nb: 1,\nc: 2\n},\nd: 2\n};",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -392,6 +433,7 @@ ruleTester.run("object-property-newline", rule, {
         {
             code: "({ foo: 1 /* comment */, bar: 2 })",
             output: "({ foo: 1 /* comment */,\nbar: 2 })",
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
@@ -403,13 +445,29 @@ ruleTester.run("object-property-newline", rule, {
         },
         {
             code: "({ foo: 1, /* comment */ bar: 2 })",
-            output: null, // not fixed due to comment
+            output: null, // not fixed because of comment
+            options: ["always"],
             errors: [
                 {
                     message: "Object properties must go on a new line.",
                     type: "ObjectExpression",
                     line: 1,
                     column: 26
+                }
+            ]
+        },
+
+        // default ("always"), { allowAllPropertiesOnSameLine: true }
+        {
+            code: "var obj = {\nk1: 'val1',\nk2: 'val2', k3: 'val3'\n};",
+            output: "var obj = {\nk1: 'val1',\nk2: 'val2',\nk3: 'val3'\n};",
+            options: [{ allowAllPropertiesOnSameLine: true }],
+            errors: [
+                {
+                    message: "Object properties must go on a new line if they aren't all on the same line.",
+                    type: "ObjectExpression",
+                    line: 3,
+                    column: 13
                 }
             ]
         },
@@ -590,6 +648,21 @@ ruleTester.run("object-property-newline", rule, {
             ]
         },
 
+        // default ("always"), { allowMultiplePropertiesPerLine: true } (deprecated)
+        {
+            code: "var obj = {\nk1: 'val1',\nk2: 'val2', k3: 'val3'\n};",
+            output: "var obj = {\nk1: 'val1',\nk2: 'val2',\nk3: 'val3'\n};",
+            options: [{ allowMultiplePropertiesPerLine: true }],
+            errors: [
+                {
+                    message: "Object properties must go on a new line if they aren't all on the same line.",
+                    type: "ObjectExpression",
+                    line: 3,
+                    column: 13
+                }
+            ]
+        },
+
         // "always", { allowMultiplePropertiesPerLine: true } (deprecated)
         {
             code: "var obj = {\nk1: 'val1',\nk2: 'val2', k3: 'val3'\n};",
@@ -601,6 +674,22 @@ ruleTester.run("object-property-newline", rule, {
                     type: "ObjectExpression",
                     line: 3,
                     column: 13
+                }
+            ]
+        },
+
+        // default ("always"), { treatComputedPropertiesLikeJSCS: true }
+        {
+            code: "foo({\nk1: 'val1', [\nisFoo ? 'foo' : 'noo'\n]: 'val2', baz})",
+            output: "foo({\nk1: 'val1', [\nisFoo ? 'foo' : 'noo'\n]: 'val2',\nbaz})",
+            options: [{ treatComputedPropertiesLikeJSCS: true }],
+            parserOptions: { ecmaVersion: 6 },
+            errors: [
+                {
+                    message: "Object properties must go on a new line. The opening bracket of a computed property name may end a line on which another property appears.",
+                    type: "ObjectExpression",
+                    line: 4,
+                    column: 12
                 }
             ]
         },
@@ -630,6 +719,27 @@ ruleTester.run("object-property-newline", rule, {
                     type: "ObjectExpression",
                     line: 4,
                     column: 4
+                }
+            ]
+        },
+
+        // default ("always"), { noCommaFirst: true }
+        {
+            code: "var obj = {\nk1: 'val1'\n, k2: 'val2'\n, k3: 'val3'\n};",
+            output: "var obj = {\nk1: 'val1'\n,\nk2: 'val2'\n,\nk3: 'val3'\n};",
+            options: [{ noCommaFirst: true }],
+            errors: [
+                {
+                    message: "Object properties must go on a new line. The comma delimiting two properties may not share a line with any of the second property.",
+                    type: "ObjectExpression",
+                    line: 3,
+                    column: 3
+                },
+                {
+                    message: "Object properties must go on a new line. The comma delimiting two properties may not share a line with any of the second property.",
+                    type: "ObjectExpression",
+                    line: 4,
+                    column: 3
                 }
             ]
         },
@@ -670,6 +780,24 @@ ruleTester.run("object-property-newline", rule, {
                     message: "Object properties must go on a new line. The comma delimiting two properties may not share a line with any of the second property.",
                     type: "ObjectExpression",
                     line: 4,
+                    column: 3
+                }
+            ]
+        },
+
+        // default ("always"), { treatComputedPropertiesLikeJSCS: true, noCommaFirst: true }
+        {
+            code: "var obj = {\nk1: 'val1'\n, k2: 'val2'\n, [\nbaz2\n]: 'val3'\n};",
+            output: "var obj = {\nk1: 'val1'\n,\nk2: 'val2'\n, [\nbaz2\n]: 'val3'\n};",
+            options: [{
+                treatComputedPropertiesLikeJSCS: true, noCommaFirst: true
+            }],
+            parserOptions: { ecmaVersion: 6 },
+            errors: [
+                {
+                    message: "Object properties must go on a new line. The opening bracket of a computed property name may end a line on which another property appears. The comma delimiting two properties may not share a line with any of the second property.",
+                    type: "ObjectExpression",
+                    line: 3,
                     column: 3
                 }
             ]
