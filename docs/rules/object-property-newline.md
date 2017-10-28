@@ -1,6 +1,7 @@
 # enforce placing object properties on separate lines (object-property-newline)
 
-This rule permits you to restrict the locations of property specifications in object literals. You may prohibit any part of any property specification from appearing on the same line as any part of any other property specification. You may make this prohibition absolute, or, by invoking an object option, you may allow an exception, permitting an object literal to have all parts of all of its property specifications on a single line. Other object options let you make the rule looser or stricter with respect to certain notations.
+This rule permits you to restrict the locations of property specifications in object literals. You may require or prohibit the appearance of property specifications on different lines from each other. You may also make some
+exceptions to such a restriction.
 
 ## Rule Details
 
@@ -27,7 +28,7 @@ const newObject = {
 
 ```
 
-Instead of those, you can comply with the rule by writing
+Instead of those, you can comply with that requirement by writing
 
 ```js
 const newObject = {
@@ -54,7 +55,7 @@ const newObject = {
 };
 ```
 
-Another benefit of this rule is specificity of diffs when a property is changed:
+Another benefit of this requirement is specificity of diffs when a property is changed:
 
 ```diff
 // More specific
@@ -72,11 +73,21 @@ Another benefit of this rule is specificity of diffs when a property is changed:
 +var obj = { foo: "foo", bar: "bazz", baz: "baz" };
 ```
 
-### Optional Exceptions
+Object literals whose properties appear one after the other on the same line are, however, more compact. Particularly if they use ES2015 shorthand notation, you may wish to avoid unnecessary vertical spacing by disallowing line separation among property specifications.
 
-The rule offers three object options.
+### Options
 
-#### `allowAllPropertiesOnSameLine`
+#### String Option
+
+This rule has a string option, whose values may be `always` (default) or `never`. The `always` option requires an object’s property specifications to appear on separate lines. The `never` option prohibits them from doing so.
+
+For each value of the string option, there is also at least one object option.
+
+#### Object Options for `always`
+
+The `always` string option can be qualified by up to three object options:
+
+- `allowAllPropertiesOnSameLine`
 
 If you set `allowAllPropertiesOnSameLine` to `true`, object literals such as the first two above, with all property specifications on the same line, will be permitted, but one like
 
@@ -92,7 +103,7 @@ will be prohibited, because two properties, but not all properties, appear on th
 
 This option also has an older, and now deprecated, name, `allowMultiplePropertiesPerLine`.
 
-#### `treatComputedPropertiesLikeJSCS`
+- `treatComputedPropertiesLikeJSCS`
 
 If you set `treatComputedPropertiesLikeJSCS` to `true`, an object literal such as the one below will be permitted:
 
@@ -106,7 +117,7 @@ const newObject = {
 
 Otherwise, this rule will prohibit it, because ESLint treats the opening bracket of a computed property name as part of the property specification. The JSCS rule `requireObjectKeysOnNewLine` does not, so this object option makes ESLint compatible with JSCS in this respect.
 
-#### `noCommaFirst`
+- `noCommaFirst`
 
 If you set `noCommaFirst` to `true`, an object literal such as the one below will be prohibited, even though all its property specifications are on separate lines:
 
@@ -120,6 +131,17 @@ const newFunction = multiplier => ({
 
 This object option makes the rule stricter by prohibiting one of the patterns by which you could comply with the rule. Specifically, the comma between two property specifications may not appear before the second one on the same line. The JSCS rule `requireObjectKeysOnNewLine` treats commas this way, so this object option makes ESLint compatible with JSCS in this respect.
 
+#### Object Options for `never`
+
+The `never` string option can be qualified by one object option: `unlessCommaBefore`.
+
+Without this option, the `never` string option prohibits any part of any property specification from appearing on a later line than any part of the preceding property specification. That implies that a one-property object literal may occupy as many lines as you want, but an object literal with more than one property must have all of its property specifications confined to the same line.
+
+With this option set to `true`, you make an exception for any non-initial property specification, if the comma that precedes it appears on the same line. This implies that an object literal can occupy as many lines as you want, if all of the commas between its property specifications precede the following ones on the same lines. Two common patterns permitted by this exception are:
+
+- comma-first (each line begins with a comma, rather than ending with a comma)
+- multiline expressions embedded in single-line lists
+
 ### Notations
 
 This rule applies equally to all property specifications, regardless of notation, including:
@@ -130,7 +152,7 @@ This rule applies equally to all property specifications, regardless of notation
 
 ### Multiline Properties
 
-The rule prohibits the colocation on any line of at least 1 character of one property specification with at least 1 character of any other property specification. For example, the rule prohibits
+The `always` string option prohibits the colocation on any line of at least 1 character of one property specification with at least 1 character of any other property specification. For example, the `always` option prohibits
 
 ```js
 const newObject = {a: [
@@ -142,6 +164,8 @@ const newObject = {a: [
 because 1 character of the specification of `a` (i.e. the trailing `]` of its value) is on the same line as the specification of `b`.
 
 The `allowAllPropertiesOnSameLine` object option would not excuse this case, because the entire collection of property specifications spans 4 lines, not 1.
+
+The `never` string option permits a multiline property specification if it is the only property specification of its object. Otherwise,
 
 ### --fix
 
