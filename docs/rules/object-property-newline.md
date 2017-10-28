@@ -137,10 +137,10 @@ The `never` string option can be qualified by one object option: `unlessCommaBef
 
 Without this option, the `never` string option prohibits any part of any property specification from appearing on a later line than any part of the preceding property specification. That implies that a one-property object literal may occupy as many lines as you want, but an object literal with more than one property must have all of its property specifications confined to the same line.
 
-With this option set to `true`, you make an exception for any non-initial property specification, if the comma that precedes it appears on the same line. This implies that an object literal can occupy as many lines as you want, if all of the commas between its property specifications precede the following ones on the same lines. Two common patterns permitted by this exception are:
+With this option set to `true`, you make an exception for any non-initial property specification, if the comma that precedes it appears on the same line. This implies that an object literal can occupy as many lines as you want, if all of the commas between its property specifications precede the following property specifications on the same lines. Two common patterns permitted by this exception are:
 
 - comma-first (each line begins with a comma, rather than ending with a comma)
-- multiline expressions embedded in single-line lists
+- multiline expressions embedded in what would otherwise be single-line lists
 
 ### Notations
 
@@ -165,11 +165,15 @@ because 1 character of the specification of `a` (i.e. the trailing `]` of its va
 
 The `allowAllPropertiesOnSameLine` object option would not excuse this case, because the entire collection of property specifications spans 4 lines, not 1.
 
-The `never` string option permits a multiline property specification if it is the only property specification of its object. Otherwise,
+The `never` string option permits a multiline property specification if it is the only property specification of its object. If there are two or more property specifications, however, the `never` option generally makes it impossible for any of them to occupy more than one line. However, the `unlessCommaBefore` object option provides one exception, described above.
 
 ### --fix
 
-If this rule is invoked with the command-line `--fix` option, object literals that violate the rule are generally modified to comply with it. The modification in each case is to move a property specification to the next line whenever there is part or all of a previous property specification on the same line. For example,
+If this rule is invoked with the command-line `--fix` option, object literals that violate the rule are generally modified to comply with the rule.
+
+#### `--fix` with `always`
+
+When the string option is set to `always` (or is, equivalently, not set), the modification in each case is to move a property specification to the next line whenever the previous property specification is at least partly on the same line. For example,
 
 ```js
 const newObject = {
@@ -190,9 +194,11 @@ b: 'p.m.',
 
 The modification does not depend on whether the `allowAllPropertiesOnSameLine` object option is set to `true`. In other words, ESLint never collects all the property specifications onto a single line, even when this object option would permit that.
 
-ESLint does not correct a violation of this rule if a comment immediately precedes the second or subsequent property specification on a line, since ESLint cannot determine which line to put the comment onto.
+ESLint does not correct a violation of this option if a comment appears between a property specification and the preceding comma on the same line, since ESLint cannot then determine which line to put the comment onto.
 
-As illustrated above, the `--fix` option, applied to this rule, does not comply with other rules, such as `indent`, but, if those other rules are also in effect, the option applies them, too.
+As illustrated above, the `--fix` option, applied to this option, does not comply with other rules, such as `indent`, but, if those other rules are also in effect, the option applies them, too.
+
+#### `--fix` with `never`
 
 ## Examples
 
