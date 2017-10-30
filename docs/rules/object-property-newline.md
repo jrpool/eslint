@@ -307,7 +307,9 @@ const obj = {
 const user = process.argv[2];
 const obj = {
     user,
+
     [process.argv[3] ? "foo" : "bar"]: 0,
+
     baz: [
         1,
         2,
@@ -375,8 +377,11 @@ const obj = {
 };
 
 const obj = {
+
     foo: "foo", bar: "bar",
+
     baz: "baz"
+
 };
 
 const domain = process.argv[4];
