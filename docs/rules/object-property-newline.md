@@ -229,6 +229,8 @@ const newObject = {
 };
 ```
 
+The above-described conversions do not take place if the first of the two lines ends with a comment. In a case of a `//` comment, concatenating the lines would cause the second line to get included, erroneously, in the comment. Even in a case of a `/* */` comment, its referent may become less obvious if it becomes embedded within a line. So, in both cases, `--fix` is disabled.
+
 ## Examples
 
 ### `always` string option
